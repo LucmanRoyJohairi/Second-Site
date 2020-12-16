@@ -29,3 +29,7 @@ $router->patch('/users/{id}', 'UserController@updateUsers');//update specific fi
 $router->delete('/users/{id}', 'UserController@removeUser');//get
 $router->get('/login','UserController@login');
 $router->post('/submit', 'UserController@submit');
+
+//userjob
+$router->get('/usersjob', 'UserJobController@index');
+$router->get('/usersjob/{id}', 'UserJobController@show'); // get user by id

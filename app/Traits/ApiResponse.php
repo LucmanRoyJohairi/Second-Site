@@ -4,7 +4,7 @@ use Illuminate\Http\Response;
 
 trait ApiResponse{
     public function successResponse($data, $code = Response::HTTP_OK){
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data, 'site' => 2]);
     }
     public function successResponse2(){
         return 'New record has been added to the database.';
@@ -21,7 +21,7 @@ trait ApiResponse{
 //        return response()
 //    }
     public function errorResponse($message, $code){
-        return response()->json(['error' => $message, 'code' => $code], $code);
+        return response()->json(['error' => $message, 'site' => 2, 'code' => $code], $code);
     }
 }
 

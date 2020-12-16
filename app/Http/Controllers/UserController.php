@@ -1,36 +1,7 @@
 <?php
 
-//this is where the controller is located
-//namespace App\Http\Controllers;
-//
-////library for making request
-//use App\Model\User;
-////use App\Traits\ApiResponser;
-////use Illuminate\Http\Request;
-//use DB;
-//
-//Class UserController extends Controller {
-//    use ApiResponser;
-//    private $request;
-//
-//    public function __construct(Request $request){
-//        $this->request = $request;
-//    }
-//    public function getUsers(){
-//        //$users = User::all();
-//
-//        $users = DB::connection('mysql');
-//        ->select("SELECT * FROM tblaccounts");
-//        return $this->response($users, 200);
-//    }
-//    public function index(){
-//        $users = User::all();
-//        return $this->successResponse($users);
-//    }
-//}
-
 namespace App\Http\Controllers;
-
+use App\Model\UserJob;
 use Illuminate\Http\Request;
 use App\Model\User;
 use App\Traits\ApiResponse;
@@ -98,11 +69,20 @@ Class UserController extends Controller
         $rule=[
             'username' => 'required|max:20',
             'password' => 'required|max:20',
+            'jobid' => 'required|numeric|min:1|not_in:0',
 
         ];
+        
         $this->validate($request, $rule);//parameters(the request, the rule)
+
+        $userjob = UserJob::findOrFail($request->jobid);
         $user = User::create($request -> all());
-        return $this->successResponse2();
+        if($userjob->isClean()){
+            return $this->successResponse2();
+        }else{
+            return $this->errorResponse("job id does not exist .",Response::HTTP_NOT_FOUND);
+        }
+        
     }
 
     //display user by id
@@ -122,9 +102,14 @@ Class UserController extends Controller
         $rule=[
             'username' => 'max:20',
             'password' => 'max:20',
+            'jobid' => 'required|numeric|min:1|not_in:0',
 
         ];
+        $this->validate($request, $rule);
         //$user = User::findOrFail($id);
+
+        $userjob = UserJob::findOrFail($request->jobid);
+
         $user = User::where('id',$id)->first();
         if($user){
             $user->fill($request->all());
